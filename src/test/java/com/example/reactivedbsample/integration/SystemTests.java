@@ -1,5 +1,6 @@
-package com.example.reactivedbsample;
+package com.example.reactivedbsample.integration;
 
+import com.example.reactivedbsample.testcontainers.PostgresTestContainer;
 import com.example.reactivedbsample.bl.operation.api.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

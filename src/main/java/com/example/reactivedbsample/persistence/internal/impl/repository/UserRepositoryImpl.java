@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public class UserRepositoryImpl extends BaseRepository implements UserRepository {
     @Override
     public Mono<ExampleUser> loadByEmailAndPessimisticallyLock(String email) {
-        return dsl(dsl -> dsl
+        return withDsl(dsl -> dsl
                         .selectFrom(Tables.EXAMPLE_USER)
                         .where(Tables.EXAMPLE_USER.EMAIL.eq(email))
                         .forUpdate())
@@ -20,19 +20,20 @@ public class UserRepositoryImpl extends BaseRepository implements UserRepository
     @Override
     public Mono<ExampleUser> save(ExampleUser user) {
         if (user.id() == 0) {
-            return dsl(dsl -> dsl
-                            .insertInto(Tables.EXAMPLE_USER)
-                            .set(Tables.EXAMPLE_USER.EMAIL, user.email())
-                            .set(Tables.EXAMPLE_USER.PASSWORD, user.password())
-                            .returningResult(Tables.EXAMPLE_USER.USER_ID))
+            return withDsl(dsl -> dsl
+                    .insertInto(Tables.EXAMPLE_USER)
+                    .set(Tables.EXAMPLE_USER.EMAIL, user.email())
+                    .set(Tables.EXAMPLE_USER.PASSWORD, user.password())
+                    .returningResult(Tables.EXAMPLE_USER.USER_ID))
                     .map(r -> new ExampleUser(r.value1(), user.email(), user.password()));
+        } else {
+            return withDsl(dsl -> dsl
+                    .update(Tables.EXAMPLE_USER)
+                    .set(Tables.EXAMPLE_USER.EMAIL, user.email())
+                    .set(Tables.EXAMPLE_USER.PASSWORD, user.password())
+                    .where(Tables.EXAMPLE_USER.USER_ID.eq(user.id()))
+                    .returningResult(Tables.EXAMPLE_USER.USER_ID))
+                    .map(r -> user);
         }
-        return dsl(dsl -> dsl
-                .update(Tables.EXAMPLE_USER)
-                .set(Tables.EXAMPLE_USER.EMAIL, user.email())
-                .set(Tables.EXAMPLE_USER.PASSWORD, user.password())
-                .where(Tables.EXAMPLE_USER.USER_ID.eq(user.id()))
-                .returningResult(Tables.EXAMPLE_USER.USER_ID)
-        ).map(r -> user);
     }
 }

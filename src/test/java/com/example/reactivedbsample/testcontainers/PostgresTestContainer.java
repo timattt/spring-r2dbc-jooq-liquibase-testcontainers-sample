@@ -1,4 +1,4 @@
-package com.example.reactivedbsample;
+package com.example.reactivedbsample.testcontainers;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
