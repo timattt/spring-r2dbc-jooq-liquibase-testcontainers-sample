@@ -7,6 +7,7 @@ import com.example.reactivedbsample.bl.operation.api.service.UserService;
 import com.example.reactivedbsample.bl.operation.spi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
 
     @Override
-    // @Transactional
+    @Transactional
     public Mono<ExampleUser> createUser(String email, String password) throws UserWithSuchEmailExistsException {
         Assert.notNull(email, "email must not be null");
         Assert.notNull(password, "password must not be null");
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    // @Transactional
+    @Transactional
     public Mono<ExampleUser> findByEmail(String email) throws NoSuchUserException {
         Assert.notNull(email, "email must not be null");
         return userRepository
