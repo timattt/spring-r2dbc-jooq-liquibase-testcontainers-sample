@@ -13,7 +13,7 @@ import org.springframework.r2dbc.connection.TransactionAwareConnectionFactoryPro
 @ComponentScan
 public class PersistenceConfig {
     @Bean
-    public DSLContext dslContext(ConnectionFactory connectionFactory) {
+    public DSLContext defaultDslContext(ConnectionFactory connectionFactory) {
         return DSL.using(
                 new TransactionAwareConnectionFactoryProxy(connectionFactory),
                 SQLDialect.POSTGRES
